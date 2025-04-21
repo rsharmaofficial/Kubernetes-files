@@ -1,11 +1,11 @@
 # How to setup two-tier application deployment on kubernetes cluster
 ## First setup kubernetes kubeadm cluster
-Use this repository to setup kubeadm [https://github.com/](https://github.com/rsharmaofficial/Kubernetes-installation)
+Use this repository to setup kubeadm https://github.com/rsharmaofficial/Kubernetes-installation
 
 ## SetUp
 - First clone the code to your machine
 ```bash
-git clone https://github.com/LondheShubham153/two-tier-flask-app.git
+git clone https://github.com/rsharmaofficial/2-tier-flask
 ```
 - Move to k8s directory
 ```bash
