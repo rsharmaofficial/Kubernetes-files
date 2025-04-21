@@ -1,56 +1,65 @@
-# 🚀 Deploy a Two-Tier Flask App on Kubernetes
+# Kubernetes Two-Tier Flask App Deployment Guide
 
-This repository provides the Kubernetes YAML files to deploy a **Two-Tier Flask Web Application** with a **MySQL database** backend on a `kubeadm` Kubernetes cluster.
+## Overview
+This project demonstrates how to deploy a **two-tier architecture** using Kubernetes, consisting of a **Flask web application** connected to a **MySQL database**. You will learn how to:
 
----
-
-## 📦 Prerequisites
-
-Before deploying this app, you must set up a Kubernetes cluster using `kubeadm`.
-
-👉 **Follow the Kubernetes setup here:**  
-🔗 [Kubernetes Installation using Kubeadm](https://github.com/rsharmaofficial/Kubernetes-installation)
+- Create deployments and services in Kubernetes.
+- Connect a web app to a MySQL database.
+- Scale the application.
+- Set up persistent storage for MySQL.
 
 ---
 
-## 💠 Setup Instructions
+## 🛠️ Prerequisites
 
-### 1. Clone the Repository
+- A running Kubernetes cluster (preferably set up with `kubeadm`).
+- `kubectl` installed and configured.
+- Basic knowledge of Kubernetes.
+- Docker images already available on Docker Hub.
 
-```bash
-git clone https://github.com/rsharmaofficial/2-tier-flask
+> You can refer to this [Kubernetes installation repo](https://github.com/rsharmaofficial/Kubernetes-installation) to set up your cluster.
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── k8s
+│   ├── mysql-deployment.yml
+│   ├── mysql-deployment-svc.yml
+│   ├── persistent-volume.yml
+│   ├── persistent-volume-claim.yml
+│   ├── twotier-deployment.yml
+│   └── twotier-deployment-svc.yml
+└── README.md
 ```
 
 ---
 
-### 2. Navigate to Kubernetes Manifests
+## 🚀 Setup Instructions
 
+### 1. Clone the Repository
 ```bash
+git clone https://github.com/rsharmaofficial/2-tier-flask
 cd 2-tier-flask/k8s
 ```
 
----
+### 2. Apply the Kubernetes YAML Files
 
-### 3. Apply the Kubernetes YAML Files
-
-Run the following commands to deploy your app components in the correct order:
-
-#### 📁 Persistent Volume & Claim
-
+#### Create Persistent Volume and Claim for MySQL
 ```bash
 kubectl apply -f persistent-volume.yml
 kubectl apply -f persistent-volume-claim.yml
 ```
 
-#### 🐬 MySQL Deployment and Service
-
+#### Deploy the MySQL Database
 ```bash
 kubectl apply -f mysql-deployment.yml
 kubectl apply -f mysql-deployment-svc.yml
 ```
 
-#### 🌐 Flask App Deployment and Service
-
+#### Deploy the Flask Application
 ```bash
 kubectl apply -f twotier-deployment.yml
 kubectl apply -f twotier-deployment-svc.yml
@@ -58,36 +67,72 @@ kubectl apply -f twotier-deployment-svc.yml
 
 ---
 
-## 📸 Screenshots
+## 📦 YAML Breakdown
 
-| EC2 Initialization | MySQL Pod Running | Flask App Running |
-|--------------------|-------------------|--------------------|
-| ![EC2 Init](./Screenshot%202025-04-19%20003816.png) | ![MySQL Deployment](./Screenshot%202025-04-19%20003345.png) | ![App Pod](./Screenshot%202025-04-19%20003403.png) |
-| ![PVC Bound](./Screenshot%202025-04-19%20003416.png) | ![Pods List](./Screenshot%202025-04-19%20003428.png) | ![Service Created](./Screenshot%202025-04-19%20003441.png) |
+### twotier-deployment.yml
+- Deploys a Flask container using Docker image `trainwithshubham/two-tier-flask-app`.
+- Environment variables connect it to the MySQL service.
+- You can scale it using:
+```bash
+kubectl scale deployment flask-app --replicas=3
+```
 
-> 🖼️ Make sure these images are stored in the root of your repo for proper rendering.
-
----
-
-## 📡 Accessing the Application
-
-After all services are up and running, find the external IP or NodePort to access the app:
-
+### twotier-deployment-svc.yml
+- Exposes the Flask app on `NodePort` for external access.
+- You can get the port using:
 ```bash
 kubectl get svc
 ```
 
-Then open the exposed IP address in your browser.
+### mysql-deployment.yml
+- Creates a pod running MySQL.
+- Connects the database to persistent storage.
+- Initializes with environment variables.
+
+### mysql-deployment-svc.yml
+- Exposes MySQL as a `ClusterIP` service so Flask can connect to it inside the cluster.
+
+### persistent-volume.yml & persistent-volume-claim.yml
+- Ensure MySQL data persists even after pod restarts or rescheduling.
+
+---
+---
+
+## ✅ Validation & Access
+
+- Confirm everything is running:
+```bash
+kubectl get all
+```
+- Access the Flask app using your EC2 public IP and the `NodePort` assigned.
 
 ---
 
-## 🙌 Author
+## 🧠 Concepts Covered
 
-Made with ❤️ by [Rishabh Sharma](https://github.com/rsharmaofficial)
+- Kubernetes Deployments, Services, PV/PVC.
+- Docker image usage in K8s.
+- Two-tier architecture (Web + DB).
+- Stateful application deployment.
 
 ---
 
-## 📃 License
+## 🤝 Contributing
+Feel free to fork and contribute. Raise issues if anything breaks!
 
-This project is open-source and available under the [MIT License](LICENSE).
+---
+
+## 👨‍💻 Author
+**Rishabh Sharma**
+
+GitHub: [@rsharmaofficial](https://github.com/rsharmaofficial)
+
+---
+
+## 📄 License
+This project is licensed under the MIT License.
+
+---
+
+Happy Deploying! 🚀
 
